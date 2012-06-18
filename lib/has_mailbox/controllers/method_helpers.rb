@@ -30,13 +30,14 @@ module HasMailbox
 					unless params[:mailbox].blank?
 						@message = eval($mapping[:user_object_name]).send(params[:mailbox]).find(params[:id])
 						message_from = @message.from.send($mapping[:user_display_attribute])
+						message_to_name = @message.to.name
 						message_created_at = @message.created_at.strftime('%A, %B %d, %Y at %I:%M %p')
 						unless params[:mailbox] == "outbox"
 							read_unread_messages(true,@message)
 							@message_description = "On " + message_created_at +' <span class="recipient_name">' + message_from + "</span> wrote :"
 							@user_tokens = @message.from.id
 						else
-							@message_description = "You wrote to <span class='recipient_name'>" + message_from + "</span> at " + message_created_at + " :"
+							@message_description = "You wrote to <span class='recipient_name'>" + message_to_name + "</span> at " + message_created_at + " :"
 						end
 					end
 				end
